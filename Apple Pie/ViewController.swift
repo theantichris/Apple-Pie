@@ -8,11 +8,21 @@
 import UIKit
 
 class ViewController: UIViewController {
+    var currentGame: Game!
     var listOfWords = ["buccaneer", "swift", "glorious", "incadescent", "bug", "program"]
     let incorrectMovesAllowed = 7
-    var totalWins = 0
-    var totalLosses = 0
-    var currentGame: Game!
+    
+    var totalWins = 0 {
+        didSet {
+            newRound()
+        }
+    }
+    
+    var totalLosses = 0 {
+        didSet {
+            newRound()
+        }
+    }
     
     @IBOutlet var treeImageView: UIImageView!
     @IBOutlet var correctWordLabel: UILabel!
@@ -54,7 +64,17 @@ class ViewController: UIViewController {
         
         currentGame.playerGuessed(letter: letter)
         
-        updateUI()
+        updateGameState()
+    }
+    
+    func updateGameState() {
+        if currentGame.incorrectMovesRemaining == 0 {
+            totalLosses += 1
+        } else if currentGame.word == currentGame.formattedWord {
+            totalWins += 1
+        } else {
+            updateUI()
+        }
     }
 }
 
